@@ -1,1 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alison's Creative Studio</title>
+    <style>
+        :root {
+            --primary: #ffafcc;
+            --secondary: #bde0fe;
+            --dark: #4a4e69;
+            --light: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0eff4;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+        }
+        header {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .mascot-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .speech-bubble {
+            background: var(--secondary);
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            max-width: 400px;
+            font-weight: bold;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        h2 { margin-top: 0; color: var(--dark); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        
+        /* Calendar Styles */
+        .calendar-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        input, textarea, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { opacity: 0.9; }
+        .schedule-list { list-style: none; padding: 0; max-height: 200px; overflow-y: auto; }
+        .schedule-list li { background: var(--light); padding: 8px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; }
+
+        /* Notepad Styles */
+        textarea { resize: none; height: 100%; min-height: 150px; }
+
+        /* Sketchpad Styles */
+        .tools { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+        .tool-btn { background: #e0e0e0; color: var(--dark); font-size: 12px; }
+        .tool-btn.active { background: var(--primary); color: white; }
+        canvas { border: 2px dashed #ccc; background: white; border-radius: 10px; cursor: crosshair; width: 100%; height: 200px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>✏️ Alison's Creative Space ✏️</h1>
+        <div class="mascot-container">
+            <!-- Simple CSS/Emoji Mascot representation -->
+            <div style="font-size: 50px;">🐿️</div>
+            <div class="speech-bubble">
+                "Hi Alison! I'm Sketchy! Use the tools below to track your school deadlines, sketch your ideas, or scribble quick notes!"
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container">
+        <!-- Calendar / School Schedule Section -->
+        <div class="card">
+            <h2>📅 School Due Dates</h2>
+            <div class="calendar-input">
+                <input type="text" id="taskInput" placeholder="e.g., Math Homework">
+                <input type="date" id="dateInput">
+                <button onclick="addEvent()">Add</button>
+            </div>
+            <ul id="scheduleList" class="schedule-list"></ul>
+        </div>
+
+        <!-- Notepad Section -->
+        <div class="card">
+            <h2>📝 Notepad</h2>
+            <textarea placeholder="Type your class notes or reminders here..."></textarea>
+        </div>
+
+        <!-- Sketchpad Section -->
+        <div class="card">
+            <h2>🎨 Sketch & Ruler Tool</h2>
+            <div class="tools">
+                <button class="tool-btn active" onclick="setTool('pencil', this)">✏️ Pencil</button>
+                <button class="tool-btn" onclick="setTool('pen', this)">✒️ Pen</button>
+                <button class="tool-btn" onclick="setTool('ruler', this)">📏 Straight Ruler</button>
+                <button class="tool-btn" style="background:#ff6b6b; color:white;" onclick="clearCanvas()">Clear</button>
+            </div>
+            <canvas id="sketchpad"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Calendar Logic
+        function addEvent() {
+            const task = document.getElementById('taskInput').value;
+            const date = document.getElementById('dateInput').value;
+            if(!task || !date) return alert("Please fill in both fields!");
+            
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${date}</strong>: ${task}`;
+            document.getElementById('scheduleList').appendChild(li);
+            
+            document.getElementById('taskInput').value = '';
+            document.getElementById('dateInput').value = '';
+        }
+
+        // Sketchpad Logic
+        const canvas = document.getElementById('sketchpad');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let currentTool = 'pencil';
+        let startX, startY;
+
+        // Adjust canvas internal resolution
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            ctx.lineCap = 'round';
+        }
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        function setTool(tool, btn) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            startX = e.offsetX;
+            startY = e.offsetY;
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            
+            // Set Tool Styles
+            if (currentTool === 'pencil') { ctx.lineWidth = 2; ctx.strokeStyle = '#666'; }
+            if (currentTool === 'pen') { ctx.lineWidth = 4; ctx.strokeStyle = '#000'; }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            if (currentTool === 'pencil' || currentTool === 'pen') {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (!drawing) return;
+            // Ruler Tool draws a perfectly straight line from start to finish
+            if (currentTool === 'ruler') {
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#4a90e2';
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+            }
+            drawing = false;
+        });
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
 
