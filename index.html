@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alison's Creative Studio</title>
+    <title>Alison's Cute Creative Studio</title>
     <style>
         :root {
             --primary: #ffafcc;
             --secondary: #bde0fe;
+            --slime: #9bf6ff;
             --dark: #4a4e69;
-            --light: #f8f9fa;
+            --light: #fff0f5;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0eff4;
+            background-color: #f7ede2;
             margin: 0;
             padding: 20px;
             color: var(--dark);
@@ -22,114 +23,167 @@
             text-align: center;
             background: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 25px; /* Softer, highly rounded edges */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
         }
         .mascot-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-top: 10px;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .slime-mascot {
+            font-size: 60px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        .slime-mascot:hover {
+            transform: scale(1.15);
         }
         .speech-bubble {
-            background: var(--secondary);
-            padding: 15px;
-            border-radius: 15px;
+            background: #cbf3f0;
+            padding: 15px 20px;
+            border-radius: 20px; /* Rounded corners */
             position: relative;
-            max-width: 400px;
+            max-width: 450px;
             font-weight: bold;
+            border: 2px dashed #2ec4b6;
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
         }
         .card {
             background: white;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-radius: 25px; /* Soft edges for all squares */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
         }
-        h2 { margin-top: 0; color: var(--dark); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        h2 { margin-top: 0; color: var(--dark); border-bottom: 3px dashed var(--primary); padding-bottom: 8px; }
         
-        /* Calendar Styles */
-        .calendar-input {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        input, textarea, select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover { opacity: 0.9; }
-        .schedule-list { list-style: none; padding: 0; max-height: 200px; overflow-y: auto; }
-        .schedule-list li { background: var(--light); padding: 8px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; }
+        /* Monday-Friday Planner */
+        .week-grid { display: flex; flex-direction: column; gap: 10px; }
+        .day-row { background: var(--light); padding: 12px; border-radius: 15px; border-left: 5px solid var(--primary); }
+        .day-title { font-weight: bold; margin-bottom: 5px; color: #ff85a1; }
+        .day-input-area { display: flex; gap: 8px; }
 
-        /* Notepad Styles */
-        textarea { resize: none; height: 100%; min-height: 150px; }
+        /* Calculator Styles */
+        .calc-screen {
+            background: #e9ecef;
+            padding: 15px;
+            font-size: 20px;
+            text-align: right;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            min-height: 30px;
+            font-family: monospace;
+        }
+        .calc-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .calc-btn { background: var(--secondary); border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .calc-btn:hover { background: #a2d2ff; }
+
+        /* Textarea and General Elements */
+        textarea { resize: none; min-height: 120px; border-radius: 15px; border: 2px solid #ddd; padding: 10px; }
+        input { padding: 8px; border: 2px solid #ddd; border-radius: 12px; width: 100%; box-sizing: border-box; }
+        button { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        button:hover { opacity: 0.9; }
 
         /* Sketchpad Styles */
-        .tools { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
-        .tool-btn { background: #e0e0e0; color: var(--dark); font-size: 12px; }
+        .tools { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .tool-btn { background: #f0f0f0; color: var(--dark); font-size: 13px; border-radius: 12px; }
         .tool-btn.active { background: var(--primary); color: white; }
-        canvas { border: 2px dashed #ccc; background: white; border-radius: 10px; cursor: crosshair; width: 100%; height: 200px; }
+        canvas { border: 3px dashed #bde0fe; background: white; border-radius: 20px; cursor: crosshair; width: 100%; height: 220px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>✏️ Alison's Creative Space ✏️</h1>
+        <h1>✨ Alison's Creative Workspace ✨</h1>
         <div class="mascot-container">
-            <!-- Simple CSS/Emoji Mascot representation -->
-            <div style="font-size: 50px;">🐿️</div>
+            <!-- Clicking the slime triggers the voice speaking -->
+            <div class="slime-mascot" onclick="speakIntro()" title="Click to hear me talk!">🟢🧪</div>
             <div class="speech-bubble">
-                "Hi Alison! I'm Sketchy! Use the tools below to track your school deadlines, sketch your ideas, or scribble quick notes!"
+                <span id="introText">"Hi Alison! I'm your friendly slime blob helper! Click on me anytime and I will read to you. Use our cute tools below to sketch, track your homework, and count your numbers. You can do it!"</span>
+                <br><br><small style="color:#777; font-weight:normal;">(Click the slime to play audio! 🔊)</small>
             </div>
         </div>
     </header>
 
     <div class="grid-container">
-        <!-- Calendar / School Schedule Section -->
+        <!-- Monday to Friday Schedule Section -->
         <div class="card">
-            <h2>📅 School Due Dates</h2>
-            <div class="calendar-input">
-                <input type="text" id="taskInput" placeholder="e.g., Math Homework">
-                <input type="date" id="dateInput">
-                <button onclick="addEvent()">Add</button>
+            <h2>📅 Monday - Friday Planner</h2>
+            <div class="week-grid">
+                <div class="day-row">
+                    <div class="day-title">Monday</div>
+                    <div class="day-input-area"><input type="text" placeholder="Add school due dates..."><button onclick="saveNote(this)">Save</button></div>
+                </div>
+                <div class="day-row">
+                    <div class="day-title">Tuesday</div>
+                    <div class="day-input-area"><input type="text" placeholder="Add school due dates..."><button onclick="saveNote(this)">Save</button></div>
+                </div>
+                <div class="day-row">
+                    <div class="day-title">Wednesday</div>
+                    <div class="day-input-area"><input type="text" placeholder="Add school due dates..."><button onclick="saveNote(this)">Save</button></div>
+                </div>
+                <div class="day-row">
+                    <div class="day-title">Thursday</div>
+                    <div class="day-input-area"><input type="text" placeholder="Add school due dates..."><button onclick="saveNote(this)">Save</button></div>
+                </div>
+                <div class="day-row">
+                    <div class="day-title">Friday</div>
+                    <div class="day-input-area"><input type="text" placeholder="Add school due dates..."><button onclick="saveNote(this)">Save</button></div>
+                </div>
             </div>
-            <ul id="scheduleList" class="schedule-list"></ul>
         </div>
 
         <!-- Notepad Section -->
         <div class="card">
-            <h2>📝 Notepad</h2>
-            <textarea placeholder="Type your class notes or reminders here..."></textarea>
+            <h2>📝 Cute Notepad</h2>
+            <textarea placeholder="Scribble your quick thoughts, reminders, or goals here..."></textarea>
         </div>
 
-        <!-- Sketchpad Section -->
+        <!-- Cute Calculator Section -->
         <div class="card">
-            <h2>🎨 Sketch & Ruler Tool</h2>
+            <h2>🧮 Math Calculator</h2>
+            <div class="calc-screen" id="calcScreen">0</div>
+            <div class="calc-buttons">
+                <button class="calc-btn" onclick="clearCalc()">C</button>
+                <button class="calc-btn" onclick="pressCalc('/')">/</button>
+                <button class="calc-btn" onclick="pressCalc('*')">*</button>
+                <button class="calc-btn" onclick="pressCalc('-')">-</button>
+                <button class="calc-btn" onclick="pressCalc('7')">7</button>
+                <button class="calc-btn" onclick="pressCalc('8')">8</button>
+                <button class="calc-btn" onclick="pressCalc('9')">9</button>
+                <button class="calc-btn" onclick="pressCalc('+')">+</button>
+                <button class="calc-btn" onclick="pressCalc('4')">4</button>
+                <button class="calc-btn" onclick="pressCalc('5')">5</button>
+                <button class="calc-btn" onclick="pressCalc('6')">6</button>
+                <button class="calc-btn" onclick="calculateResult()">=</button>
+                <button class="calc-btn" onclick="pressCalc('1')">1</button>
+                <button class="calc-btn" onclick="pressCalc('2')">2</button>
+                <button class="calc-btn" onclick="pressCalc('3')">3</button>
+                <button class="calc-btn" onclick="pressCalc('0')">0</button>
+            </div>
+        </div>
+
+        <!-- Sketchpad & Animal Stickers Section -->
+        <div class="card">
+            <h2>🎨 Sketchpad & Stickers</h2>
             <div class="tools">
                 <button class="tool-btn active" onclick="setTool('pencil', this)">✏️ Pencil</button>
                 <button class="tool-btn" onclick="setTool('pen', this)">✒️ Pen</button>
-                <button class="tool-btn" onclick="setTool('ruler', this)">📏 Straight Ruler</button>
+                <button class="tool-btn" onclick="setTool('ruler', this)">📏 Ruler</button>
+                <button class="tool-btn" style="background:#ffccd5;" onclick="setTool('🐰', this)">🐰 Bunny</button>
+                <button class="tool-btn" style="background:#ffccd5;" onclick="setTool('🐱', this)">🐱 Kitten</button>
+                <button class="tool-btn" style="background:#ffccd5;" onclick="setTool('🐸', this)">🐸 Frog</button>
+                <button class="tool-btn" style="background:#ffccd5;" onclick="setTool('🐶', this)">🐶 Puppy</button>
                 <button class="tool-btn" style="background:#ff6b6b; color:white;" onclick="clearCanvas()">Clear</button>
             </div>
             <canvas id="sketchpad"></canvas>
@@ -137,78 +191,24 @@
     </div>
 
     <script>
-        // Calendar Logic
-        function addEvent() {
-            const task = document.getElementById('taskInput').value;
-            const date = document.getElementById('dateInput').value;
-            if(!task || !date) return alert("Please fill in both fields!");
+        // Slime Voice Introduction Logic
+        function speakIntro() {
+            const introText = document.getElementById('introText').innerText;
+            // Clear any speech running right now
+            window.speechSynthesis.cancel();
             
-            const li = document.createElement('li');
-            li.innerHTML = `<strong>${date}</strong>: ${task}`;
-            document.getElementById('scheduleList').appendChild(li);
-            
-            document.getElementById('taskInput').value = '';
-            document.getElementById('dateInput').value = '';
+            const utterance = new SpeechSynthesisUtterance(introText);
+            // Tweak settings for a slightly higher, cuter voice pitch
+            utterance.pitch = 1.4; 
+            utterance.rate = 1.0; 
+            window.speechSynthesis.speak(utterance);
         }
 
-        // Sketchpad Logic
-        const canvas = document.getElementById('sketchpad');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        let currentTool = 'pencil';
-        let startX, startY;
-
-        // Adjust canvas internal resolution
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            ctx.lineCap = 'round';
-        }
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
-
-        function setTool(tool, btn) {
-            currentTool = tool;
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // Planner Note State Save Alert
+        function saveNote(btn) {
+            const val = btn.previousElementSibling.value;
+            if(val) alert("Saved item: " + val);
         }
 
-        canvas.addEventListener('mousedown', (e) => {
-            drawing = true;
-            startX = e.offsetX;
-            startY = e.offsetY;
-            ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            
-            // Set Tool Styles
-            if (currentTool === 'pencil') { ctx.lineWidth = 2; ctx.strokeStyle = '#666'; }
-            if (currentTool === 'pen') { ctx.lineWidth = 4; ctx.strokeStyle = '#000'; }
-        });
-
-        canvas.addEventListener('mousemove', (e) => {
-            if (!drawing) return;
-            if (currentTool === 'pencil' || currentTool === 'pen') {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-            }
-        });
-
-        canvas.addEventListener('mouseup', (e) => {
-            if (!drawing) return;
-            // Ruler Tool draws a perfectly straight line from start to finish
-            if (currentTool === 'ruler') {
-                ctx.lineWidth = 3;
-                ctx.strokeStyle = '#4a90e2';
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-            }
-            drawing = false;
-        });
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-    </script>
-</body>
-</html>
-
+        // Calculator Logic
+        let calcData = "";
